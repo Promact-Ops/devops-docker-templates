@@ -1,3 +1,19 @@
+#DevOps Reusability
+# IMPORTANT: DO NOT change frontend and backend service names because these names are used in .github/workflow files
+# where we run the following commands:
+# For Frontend - docker compose up -d --build --force-recreate --no-deps frontend
+# For Backend - docker compose up -d --build --force-recreate --no-deps backend
+#
+# If you want to change the name of the service, then you must update in frontend and backend .github/workflows file
+# Let's take example you have change service name below:
+# frontend change to my-proj-frontend-dev
+# backend change to my-proj-backend-dev
+#
+# Now you need to update the Docker Compose command in .github/workflow file:
+# Frontend - docker compose up -d --build --force-recreate --no-deps frontend change to docker compose up -d --build --force-recreate --no-deps my-proj-frontend-dev
+# Backend - docker compose up -d --build --force-recreate --no-deps backend change to docker compose up -d --build --force-recreate --no-deps my-proj-backend-dev
+#
+# You can also change the Hostport of frontend and backend service but after that you must need to open those port to internet so you can access from the internet.cd
 version: "3.8"
 
 services:
