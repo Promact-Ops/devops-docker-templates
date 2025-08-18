@@ -1,3 +1,7 @@
+#DevOps Reusability
+# IMPORTANT: Change CMD ["npm", "start"] or ["npm", "run", "dev"] according to your package.json file
+# DO NOT change port 8080
+
 # Use Node.js 18 Alpine as base image
 FROM node:18-alpine
 

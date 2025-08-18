@@ -1,3 +1,9 @@
+#DevOps Reusability
+# IMPORTANT: Change "main" in CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"] to your file name
+# Example: CMD ["uvicorn", "mymainfile:app", "--host", "0.0.0.0", "--port", "8080"]
+# DO NOT change port 8080
+
+
 # Use Python 3.11 slim image as base
 FROM python:3.11-slim
 

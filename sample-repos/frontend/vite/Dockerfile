@@ -1,3 +1,7 @@
+#DevOps Reusability
+# IMPORTANT: Do not change the CMD in the Dockerfile
+# DO NOT change port 80
+
 # Build stage
 FROM node:18-alpine AS build
 
