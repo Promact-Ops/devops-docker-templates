@@ -1,5 +1,7 @@
 # 🚀 CI/CD Deployment – Dockerized Frontend & Backend
 
+#### NOTE:  This pipelines are framework agnostic supports all frameworks 
+
 This repository includes automated deployment pipelines for **frontend** and **backend** services using **GitHub Actions** and **Docker Compose** on an Ubuntu VPS.
 
 ---
