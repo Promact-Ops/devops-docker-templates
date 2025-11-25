@@ -52,7 +52,7 @@ else
     systemctl enable docker
 
     # Add USER user to docker group
-    usermod -aG docker azureuser
+    usermod -aG docker ${VPS_USER_NAME}
 
     # Install Docker Compose standalone (as backup)
     curl -oL "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
@@ -87,7 +87,7 @@ else
   mkdir -p /home/ubuntu/$PROJECT_FOLDER/backend
 
   # Set proper ownership and permissions
-  chown -R azureuser:azureuser /home/ubuntu/$PROJECT_FOLDER
+  chown -R ${VPS_USER_NAME}:${VPS_USER_NAME} /home/ubuntu/$PROJECT_FOLDER
   chmod -R 755 /home/ubuntu/$PROJECT_FOLDER
 
   # Create docker-compose.yml directly with embedded template

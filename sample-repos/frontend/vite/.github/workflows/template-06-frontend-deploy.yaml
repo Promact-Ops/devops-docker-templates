@@ -1,0 +1,34 @@
+name: 🚀 Deploy Frontend
+
+on:
+  push:
+    branches:
+      - dev
+
+
+jobs:
+  deploy-frontend:
+    name: Deploy Frontend
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🧩 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 🔐 Setup SSH Access to VPS
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.VPS_PRIVATE_KEY }}
+
+      - name: 🚢 Deploy Frontend via Docker Compose
+        run: |
+          echo "Deploying Frontend on VPS..."
+          ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.VPS_IP }} << 'EOF'
+            cd ${{ secrets.PROJECT_PATH }}/frontend
+            echo "Pulling latest changes..."
+            sudo git fetch origin dev && sudo git reset --hard origin/dev
+            cd ..
+            echo "Rebuilding frontend container..."
+            sudo docker-compose up -d --build --force-recreate --no-deps frontend
+            echo "✅ Frontend deployed successfully!"
+          EOF

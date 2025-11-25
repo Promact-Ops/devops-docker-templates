@@ -3,10 +3,8 @@ name: 🚀 Deploy Frontend
 on:
   push:
     branches:
-      - main
-    paths:
-      - 'frontend/**'
-      - '.github/workflows/deploy-frontend.yml'
+      - dev
+
 
 jobs:
   deploy-frontend:
@@ -26,9 +24,9 @@ jobs:
         run: |
           echo "Deploying Frontend on VPS..."
           ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.VPS_IP }} << 'EOF'
-            cd /home/ubuntu/_my_project-development-server/frontend
+            cd ${{ secrets.PROJECT_PATH }}/frontend
             echo "Pulling latest changes..."
-            sudo git fetch origin main && sudo git reset --hard origin/main
+            sudo git fetch origin dev && sudo git reset --hard origin/dev
             cd ..
             echo "Rebuilding frontend container..."
             sudo docker-compose up -d --build --force-recreate --no-deps frontend
