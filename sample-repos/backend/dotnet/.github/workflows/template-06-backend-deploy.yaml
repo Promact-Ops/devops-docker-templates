@@ -1,33 +1,42 @@
-name: 🚀 Deploy Backend
+name: Backend Deployment
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - dev
 
 jobs:
-  deploy-backend:
-    name: Deploy Backend
+  Backend-Deployment:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 🧩 Checkout Repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: 🔐 Setup SSH Access to VPS
-        uses: webfactory/ssh-agent@v0.8.0
-        with:
-          ssh-private-key: ${{ secrets.VPS_PRIVATE_KEY }}
-
-      - name: 🚢 Deploy Backend via Docker Compose
+      - name: Create .env
         run: |
-          echo "Deploying Backend on VPS..."
-          ssh -o StrictHostKeyChecking=no ${{ secrets.USERNAME }}@${{ secrets.VPS_IP }} << 'EOF'
-            cd ${{ secrets.PROJECT_PATH }}/backend
-            echo "Pulling latest changes..."
-            sudo git fetch origin dev && sudo git reset --hard origin/dev
-            cd ..
-            echo "Rebuilding backend container..."
-            sudo docker-compose up -d --build --force-recreate --no-deps backend
-            echo "✅ Backend deployed successfully!"
-          EOF
+          echo "Cook .env file..."
+          echo "${{ vars.BACKEND_APP_ENV }}" > .env
+
+      - name: rsync deployments
+        uses: burnett01/rsync-deployments@7.0.2
+        with:
+          switches: -avzr --delete
+          path: .
+          remote_path: ${{ vars.BACKEND_PATH }}
+          remote_host: ${{ secrets.SERVER_HOST }}
+          remote_user: ${{ secrets.SERVER_USER }}
+          remote_key: ${{ secrets.SERVER_SSH_KEY }}
+
+      - name: SSH to deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          command_timeout: 30m
+          script: |
+            cd ${{ vars.DOCKER_COMPOSE_PATH }}
+            sudo docker compose up -d --build --force-recreate --no-deps backend
+
